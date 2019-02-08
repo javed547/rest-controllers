@@ -1,6 +1,6 @@
 /**
  * 
- */
+ *//*
 package com.javed.util;
 
 import java.io.IOException;
@@ -15,10 +15,10 @@ import com.javed.dto.ListUser;
 import com.javed.dto.SingleUser;
 import com.javed.dto.User;
 
-/**
+*//**
  * @author Mohd Javed
  *
- */
+ *//*
 @Repository("responseParser")
 public class ResponseParserImpl implements ResponseParser{
 	
@@ -35,3 +35,4 @@ public class ResponseParserImpl implements ResponseParser{
 		return singleUser;
 	}
 }
+*/

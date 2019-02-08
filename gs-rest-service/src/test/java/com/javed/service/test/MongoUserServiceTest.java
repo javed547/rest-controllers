@@ -1,13 +1,11 @@
 /**
  * 
  */
-package com.javed.controller.test;
+package com.javed.service.test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,61 +15,63 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.javed.controller.UserController;
 import com.javed.dto.MongoUser;
-import com.javed.service.MongoUserService;
+import com.javed.repository.MongoUserRepository;
+import com.javed.service.MongoUserServiceImpl;
+
+import org.junit.Assert;
 
 /**
  * @author Mohd Javed
  *
  */
-@RunWith(SpringRunner.class)
-public class UserControllerTest {
+@RunWith(SpringRunner.class)	
+public class MongoUserServiceTest {
 	
 	@InjectMocks
-	private UserController testSubject = new UserController();
-		
+	private MongoUserServiceImpl testSubject = new MongoUserServiceImpl();
+	
 	@Mock
-	private MongoUserService mongoUserService;
+	private MongoUserRepository mongoUserRepository;
 	
 	@Before
-	public void setUp() throws JsonParseException, JsonMappingException, IOException{
+	public void setup(){
 		MockitoAnnotations.initMocks(this);
 	}
-	
+
 	@Test
-	public void test_create_user() throws JsonParseException, JsonMappingException, IOException{
+	public void test_create_user_service(){
 		MongoUser mongoUser = getUserInstance();
-		Mockito.when(mongoUserService.createMongoUser(mongoUser)).thenReturn(mongoUser);
+		Mockito.when(mongoUserRepository.insert(mongoUser)).thenReturn(mongoUser);
 		
 		MongoUser mongoUserResult = testSubject.createMongoUser(mongoUser);
 		Assert.assertEquals("Mohd Javed", mongoUserResult.getFirstName());
 	}
 	
 	@Test
-	public void test_update_user() throws JsonParseException, JsonMappingException, IOException{
+	public void test_update_user_service(){
 		MongoUser mongoUser = getUserInstance();
-		Mockito.when(mongoUserService.updateMongoUser(mongoUser)).thenReturn(mongoUser);
+		Mockito.when(mongoUserRepository.save(mongoUser)).thenReturn(mongoUser);
 		
 		MongoUser mongoUserResult = testSubject.updateMongoUser(mongoUser);
-		Assert.assertEquals("Khan", mongoUserResult.getLastName());
+		Assert.assertEquals("Mohd Javed", mongoUserResult.getFirstName());
 	}
 	
 	@Test
-	public void test_delete_user() throws JsonParseException, JsonMappingException, IOException{
-		testSubject.readMongoUser("1");
+	public void test_delete_user_service(){
+		Mockito.doNothing().when(mongoUserRepository).deleteById(1);
+		
+		testSubject.removeMongoUser(1);
 	}
 	
 	@Test
-	public void test_list_user() throws JsonParseException, JsonMappingException, IOException{
-		Mockito.when(mongoUserService.findAll()).thenReturn(getUserInstanceList());
+	public void test_list_users_service(){
+		Mockito.when(mongoUserRepository.findAll()).thenReturn(getUserInstanceList());
 		
 		List<MongoUser> mongoUsers = testSubject.findAll();
 		Assert.assertEquals(4, mongoUsers.size());
 	}
-
+	
 	private List<MongoUser> getUserInstanceList() {
 		List<MongoUser> mongoUsers = new ArrayList<MongoUser>();
 		
